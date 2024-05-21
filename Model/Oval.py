@@ -2,28 +2,27 @@
 
 # IMPORT STATEMENTS
 import math
+import pickle
 
 class Oval:
     # CONSTRUCTION
-    def __init__(self, radius_x=250, radius_y=200, line_color="blue", fill_color="white"):
-        header_err = "Oval.py __init__ "
-        available_colors = ["red", "white", "blue", "orange", "white", "black", "green", "yellow", "purple"]
-        if type(radius_x) is not int and type(radius_x) is not float:
-            raise TypeError(header_err + "radius_x - must be int or float")
-        if radius_x <= 0:
-            raise ValueError(header_err + "radius_x - must be positive")
-        if type(radius_y) is not int and type(radius_y) is not float:
-            raise TypeError(header_err + "radius_y - must be int or float")
-        if radius_y <= 0:
-            raise ValueError(header_err + "radius_y - must be positive")
-        if type(line_color) is not str:
+    def __init__(self, pickle_file='OutsideGeometricShapeDefaultValues.pickle'):
+        header_err = "Oval.py __init__ pickle_file - "
+        if type(pickle_file) is not str:
             raise TypeError(header_err + "line_color - must be str type")
-        if line_color not in available_colors:
-            raise ValueError(header_err + "line_color - not a valid color")
-        if type(fill_color) is not str:
-            raise TypeError(header_err + "fill_color - must be str type")
-        if fill_color not in available_colors:
-            raise ValueError(header_err + "fill_color - not a valid color")
+        if not pickle_file.endswith('.pickle'):
+            raise ValueError(header_err + "must end with .pickle")
+        
+        try:
+            with open(pickle_file, 'rb') as binary_input_file:
+                input_data = pickle.load(binary_input_file)
+                if len(input_data) != 4:
+                    raise ValueError(header_err + "invalid file content to save values")
+                radius_x, radius_y, line_color, fill_color = input_data
+        except FileNotFoundError:
+            radius_x, radius_y, line_color, fill_color = 300, 150, 'red', 'yellow'
+            with open('OutsideGeometricShapeDefaultValues.pickle', 'wb') as binary_output_file:
+                pickle.dump((radius_x, radius_y, line_color, fill_color), binary_output_file)
 
         self.__radius_x = radius_x
         self.__radius_y = radius_y
