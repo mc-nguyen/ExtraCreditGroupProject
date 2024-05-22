@@ -37,7 +37,7 @@ class ApplicationView:
         self.__file_menu.add_command(label='New', command=controller.file_new)
         self.__file_menu.add_command(label='Open', command=controller.file_open)
         self.__file_menu.add_command(label='Save as XML', command=controller.save_as_xml)
-        self.__file_menu.add_command(label='Save as JSON')
+        self.__file_menu.add_command(label='Save as JSON', command=controller.save_as_json)
         
         self.__edit_menu.add_command(label='One for each instance variable of Outside Geometric Shape', command=controller.edit_outside_geometric_shape)
         self.__edit_menu.add_command(label='One for each instance variable of Inside Geometric Shape', command=controller.edit_inside_geometric_shape)

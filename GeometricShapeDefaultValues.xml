@@ -1,0 +1,13 @@
+<DefaultValues>
+	<OutsideOval>
+		<RadiusX>300.0</RadiusX>
+		<RadiusY>200.0</RadiusY>
+		<LineColor>red</LineColor>
+		<FillColor>purple</FillColor>
+	</OutsideOval>
+	<InsideSquare>
+		<SideLength>100</SideLength>
+		<LineColor>blue</LineColor>
+		<FillColor>white</FillColor>
+	</InsideSquare>
+</DefaultValues>

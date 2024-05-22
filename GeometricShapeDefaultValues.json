@@ -1,0 +1,13 @@
+{
+    "Oval": {
+        "Fill Color": "purple",
+        "Line Color": "red",
+        "Radius X": 300.0,
+        "Radius Y": 200.0
+    },
+    "Square": {
+        "Fill Color": "white",
+        "Line Color": "blue",
+        "Side Length": 100
+    }
+}

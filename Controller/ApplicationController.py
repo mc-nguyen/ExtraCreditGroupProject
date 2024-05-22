@@ -2,9 +2,11 @@
 
 # IMPORT STATEMENTS
 import tkinter.filedialog
+import tkinter.messagebox
 import tkinter.simpledialog
 import pickle
 import xml.etree.ElementTree as ET
+import json
 
 class ApplicationController:
     # CONSTRUCTOR
@@ -43,13 +45,37 @@ class ApplicationController:
 
         if filename_to_open.endswith('.xml'):
             root = ET.parse(filename_to_open).getroot()
-            for child in root:
-                print(child.tag, child.attrib)
+            # Oval
+            self.__model_outside.set_radius_x(float(root[0][0].text))
+            self.__model_outside.set_radius_y(float(root[0][1].text))
+            self.__model_outside.set_line_color(root[0][2].text)
+            self.__model_outside.set_fill_color(root[0][3].text)
+            # Square
+            self.__model_inside.set_side_length(float(root[1][0].text))
+            self.__model_inside.set_line_color(root[1][1].text)
+            self.__model_inside.set_fill_color(root[1][2].text)
+            # Notify
+            tkinter.messagebox.showinfo("Open XML", "Successfully read your XML file!")
+        elif filename_to_open.endswith('.json'):
+            with open(filename_to_open, 'r') as input_file:
+                data_input = json.load(input_file)
+                print(data_input)
+                # Oval
+                self.__model_outside.set_radius_x(data_input['Oval']['Radius X'])
+                self.__model_outside.set_radius_y(data_input['Oval']['Radius Y'])
+                self.__model_outside.set_line_color(data_input['Oval']['Line Color'])
+                self.__model_outside.set_fill_color(data_input['Oval']['Fill Color'])
+                # Square
+                self.__model_inside.set_side_length(data_input['Square']['Side Length'])
+                self.__model_inside.set_line_color(data_input['Square']['Line Color'])
+                self.__model_inside.set_fill_color(data_input['Square']['Fill Color'])
+            # Notify
+            tkinter.messagebox.showinfo("Open XML", "Successfully read your XML file!")
 
         self.file_new()
 
     def save_as_xml(self):
-        root = ET.Element('DefaultValue')
+        root = ET.Element('DefaultValues')
         tree = ET.ElementTree(root)
 
         outside_oval = ET.SubElement(root, "OutsideOval")
@@ -70,8 +96,31 @@ class ApplicationController:
         attribute = ET.SubElement(inside_oval, "FillColor")
         attribute.text = str(self.__model_inside.get_fill_color())
 
-        with open('OutsideGeometricShapeDefaultValues.xml', 'w') as output_file:
-            tree.write(output_file)
+        ET.indent(tree, space="\t", level=0)
+        tree.write('GeometricShapeDefaultValues.xml', encoding="utf-8")
+        
+        tkinter.messagebox.showinfo('Save as XML', "Successfully saved in a XML file")
+        self.__view.get_application_window().update()
+
+    def save_as_json(self):
+        data_dictionary = {
+            'Oval': {
+                'Radius X': self.__model_outside.get_radius_x(),
+                'Radius Y': self.__model_outside.get_radius_y(),
+                'Line Color': self.__model_outside.get_line_color(),
+                'Fill Color': self.__model_outside.get_fill_color()
+            },
+            'Square': {
+                'Side Length': self.__model_inside.get_side_length(),
+                'Line Color': self.__model_inside.get_line_color(),
+                'Fill Color': self.__model_inside.get_fill_color()
+            }
+        }
+        with open('GeometricShapeDefaultValues.json', 'w') as output_file:
+            output_file.write(json.dumps(data_dictionary, sort_keys=True, indent=4))
+        
+        tkinter.messagebox.showinfo('Save as JSON', "Successfully saved in a JSON file")
+        self.__view.get_application_window().update()
 
     def edit_outside_geometric_shape(self):
         try:
@@ -109,6 +158,8 @@ class ApplicationController:
                 self.__model_outside.get_line_color(),
                 self.__model_outside.get_fill_color()
             ), binary_output_file)
+            tkinter.messagebox.showinfo('Save as PICKLE (outside)', "Successfully saved in a pickle file")
+            self.__view.get_application_window().update()
 
     def edit_pickle_file_inside_geometric_shape(self):
         self.edit_inside_geometric_shape()
@@ -118,6 +169,8 @@ class ApplicationController:
                 self.__model_inside.get_line_color(),
                 self.__model_inside.get_fill_color()
             ), binary_output_file)
+            tkinter.messagebox.showinfo('Save as PICKLE (inside)', "Successfully saved in a pickle file")
+            self.__view.get_application_window().update()
 
     def view_outside_geometric_shape(self):
         information = 'Radius X: ' + str(self.__model_outside.get_radius_x()) + ' px'
