@@ -70,4 +70,4 @@ class Oval:
         self.__fill_color = fill_color
 
     def area(self): return self.__radius_x * self.__radius_y * math.pi
-    def perimeter(self): return 2 * math.pi * math.sqrt( (self.__radius_x ** 2 + self.__radius_y ** 2) / 2 )
+    def perimeter(self): return math.pi * math.sqrt( 2 * (self.__radius_x ** 2 + self.__radius_y ** 2) )
